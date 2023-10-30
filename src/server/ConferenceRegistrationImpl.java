@@ -1,13 +1,13 @@
-package application;
+package server;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-import application.residencenode.ResidenceNode;
+import server.residencenode.ResidenceNode;
 
-public class ConferenceRegistrationImpl extends UnicastRemoteObject implements ConferenceRegistration{
+public class ConferenceRegistrationImpl extends UnicastRemoteObject implements common.ConferenceRegistration{
 
 	private static final long serialVersionUID = 1L;
 	private ResidenceNode residenceNode;
@@ -36,8 +36,9 @@ public class ConferenceRegistrationImpl extends UnicastRemoteObject implements C
 		// TODO Auto-generated method stub
 		try {
 			Registry reg = LocateRegistry.createRegistry(1099);
-			ConferenceRegistrationImpl cr = new ConferenceRegistrationImpl(3, 12, 5);
+			common.ConferenceRegistration cr = new ConferenceRegistrationImpl(3, 12, 5);
 			reg.rebind("rmi://localhost/CRServer", cr);
+			System.out.println("Server is running...");
 			
 		} catch (RemoteException e) {
 			System.out.println("Error creating the server!");

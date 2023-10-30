@@ -1,4 +1,4 @@
-package application.residencenode;
+package server.residencenode;
 
 public class Registration {
 	
