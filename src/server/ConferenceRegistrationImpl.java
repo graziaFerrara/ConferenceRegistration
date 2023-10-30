@@ -19,7 +19,7 @@ public class ConferenceRegistrationImpl extends UnicastRemoteObject implements c
 
 	@Override
 	public boolean register(String name, int day, int session) throws RemoteException {
-		return residenceNode.insertSpeaker(name, day, session);
+		return residenceNode.insertSpeaker(name.strip(), day, session);
 	}
 
 	@Override
@@ -28,12 +28,26 @@ public class ConferenceRegistrationImpl extends UnicastRemoteObject implements c
 	}
 
 	@Override
-	public boolean cancelRegistration(String name, int day, int session) throws RemoteException {
-		return residenceNode.removeSpeaker(name, day, session);
+	public boolean cancelRegistration(int day, int session, int intervention) throws RemoteException {
+		return residenceNode.removeSpeaker(day, session, intervention);
+	}
+	
+	@Override
+	public int getDays() throws RemoteException {
+		return residenceNode.getNumDays();
+	}
+
+	@Override
+	public int getSessions() throws RemoteException {
+		return residenceNode.getNumSessions();
+	}
+
+	@Override
+	public int getMaxSpeakers() throws RemoteException {
+		return residenceNode.getMaxSpeakers();
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		try {
 			Registry reg = LocateRegistry.createRegistry(1099);
 			ConferenceRegistrationImpl cr = new ConferenceRegistrationImpl(3, 12, 5);

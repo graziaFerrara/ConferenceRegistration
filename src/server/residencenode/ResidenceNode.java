@@ -11,11 +11,11 @@ public class ResidenceNode {
 		programs = new String [numDays][numSessions][maxSpeakers];
 		slots = new int [numDays][numSessions];
 		
-		int i = 0, j = 0, k = 0;
+		int i, j, k;
 		
-		for (; i<numDays; i++)
-			for (; j<numSessions; j++)
-				for (; k<maxSpeakers; k++)
+		for (i=0; i<numDays; i++)
+			for (j=0; j<numSessions; j++)
+				for (k=0; k<maxSpeakers; k++)
 					programs[i][j][k] = "-";
 		
 		for (i=0; i<numDays; i++)
@@ -54,23 +54,30 @@ public class ResidenceNode {
 			return false;
 		programs[day-1][session-1][intervention] = name;
 		slots[day-1][session-1] += 1;
+		printPrograms();
 		return true;
 	}
 
-	public boolean removeSpeaker(String name, int day, int session) {
-		if (invalidDay(day) || invalidSession(session))
+	public boolean removeSpeaker(int day, int session, int intervention) {
+		if (invalidDay(day) || invalidSession(session)) {
 			return false;
-		if (isBusy(slots[day-1][session-1]))
+		}
+		if (isBusy(slots[day-1][session-1])) {
 			return false;
-		if (programs[day-1][session-1][slots[day-1][session-1]] != name)
+		}
+		System.out.println(programs[day-1][session-1][intervention-1]);
+		if (programs[day-1][session-1][intervention-1].equals("-")) {
 			return false;
-		programs[day-1][session-1][slots[day-1][session-1]] = "-";
+		}
+		
+		programs[day-1][session-1][slots[day-1][session-1]-1] = "-";
 		slots[day-1][session-1] -= 1;
+		printPrograms();
 		return true;
 	}
 	
 	private boolean isBusy(int i) {
-		return i < maxSpeakers-1;
+		return i >= maxSpeakers;
 	}
 	
 	private boolean invalidSession(int session) {
@@ -91,6 +98,24 @@ public class ResidenceNode {
 			if (sessionArray[i] == "-")
 				return i;
 		return -1;
+	}
+	
+	private void printPrograms() {
+		
+		int i,j,k;
+		
+		for(i=0; i<numDays; i++) {
+			System.out.println("Day "+i);
+			for(j=0; j<numSessions; j++) {
+				System.out.print("S"+(j+1)+" ");
+				for(k=0; k<maxSpeakers; k++) {
+					System.out.print(programs[i][j][k] + " ");
+				}
+				System.out.print("\n");
+			}
+			
+		}
+		
 	}
 	
 }
