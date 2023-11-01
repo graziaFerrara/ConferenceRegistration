@@ -7,11 +7,25 @@ import java.rmi.server.UnicastRemoteObject;
 
 import server.residencenode.ResidenceNode;
 
-public class ConferenceRegistrationImpl extends UnicastRemoteObject implements common.ConferenceRegistration{
+/**
+ * Class representing the logic of the server. The contained methods are the
+ * ones of the interface, the documentation is reported there.
+ * 
+ * @author graziaferrara
+ *
+ */
+public class ConferenceRegistrationImpl extends UnicastRemoteObject implements common.ConferenceRegistration {
 
 	private static final long serialVersionUID = 1L;
 	private ResidenceNode residenceNode;
 
+	/**
+	 * Creates an instance of the server.
+	 * @param numDays
+	 * @param numSessions
+	 * @param maxSpeakers
+	 * @throws RemoteException
+	 */
 	public ConferenceRegistrationImpl(int numDays, int numSessions, int maxSpeakers) throws RemoteException {
 		super();
 		this.residenceNode = new ResidenceNode(numDays, numSessions, maxSpeakers);
@@ -23,15 +37,20 @@ public class ConferenceRegistrationImpl extends UnicastRemoteObject implements c
 	}
 
 	@Override
-	public String [][][] getInformation() throws RemoteException {
+	public String[][][] getInformation() throws RemoteException {
 		return residenceNode.getPrograms();
+	}
+
+	@Override
+	public String[][] getInformationByDay(int day) throws RemoteException {
+		return residenceNode.getPrograms()[day - 1];
 	}
 
 	@Override
 	public boolean cancelRegistration(int day, int session, int intervention) throws RemoteException {
 		return residenceNode.removeSpeaker(day, session, intervention);
 	}
-	
+
 	@Override
 	public int getDays() throws RemoteException {
 		return residenceNode.getNumDays();
@@ -46,13 +65,17 @@ public class ConferenceRegistrationImpl extends UnicastRemoteObject implements c
 	public int getMaxSpeakers() throws RemoteException {
 		return residenceNode.getMaxSpeakers();
 	}
-	
+
+	/**
+	 * Creates a registry and binds a remote object.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		try {
 			Registry reg = LocateRegistry.createRegistry(1099);
 			ConferenceRegistrationImpl cr = new ConferenceRegistrationImpl(3, 12, 5);
 			reg.rebind("rmi://localhost/CRServer", cr);
-			
+
 		} catch (RemoteException e) {
 			System.out.println("Error creating the server!");
 		}
